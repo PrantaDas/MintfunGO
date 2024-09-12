@@ -23,10 +23,12 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	_, err = db.ConnectToMongoDB(ctx)
+	client, err := db.ConnectToMongoDB(ctx)
 	if err != nil {
 		log.Fatal("Error connecting to MongoDB", err)
 	}
+
+	persiter := db.NewMongoDBPersister(client)
 
 	dataChannel := make(chan []api.Collection, 4)
 	defer close(dataChannel)
@@ -38,7 +40,7 @@ func main() {
 
 	go worker.FetchWorker(ctx, dataChannel)
 	go worker.TaskProcessor(ctx, dataChannel, txChannel)
-	go worker.Minter(ctx, txChannel)
+	go worker.Minter(ctx, persiter, txChannel)
 
 	<-ctx.Done()
 	log.Println("Shuttiing down gracefully...")

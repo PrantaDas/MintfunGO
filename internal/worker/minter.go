@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"mintfun/internal/db"
 	"mintfun/internal/helpers"
 )
 
-func Minter(ctx context.Context, txChan <-chan helpers.ProcessedData) {
+func Minter(ctx context.Context, db *db.MongoDBPersister, txChan <-chan helpers.ProcessedData) {
 	for {
 		select {
 		case <-ctx.Done():

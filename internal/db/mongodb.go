@@ -53,8 +53,8 @@ func ConnectToMongoDB(ctx context.Context) (*mongo.Client, error) {
 	return client, nil
 }
 
-func GetTransactionsFromDb(ctx context.Context, client *mongo.Client, address string) (bool, error) {
-	coll := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_TRANSACTION"))
+func (client *MongoDBPersister) GetTransactionsFromDb(ctx context.Context, address string) (bool, error) {
+	coll := client.MongoClient.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_TRANSACTION"))
 
 	filter := bson.D{{Key: "address", Value: address}}
 	result := coll.FindOne(ctx, filter)
@@ -68,8 +68,8 @@ func GetTransactionsFromDb(ctx context.Context, client *mongo.Client, address st
 	return true, nil
 }
 
-func InsertTransactionToDb(ctx context.Context, client *mongo.Client, tx TransactionData) error {
-	coll := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_TRANSACTION"))
+func (client *MongoDBPersister) InsertTransactionToDb(ctx context.Context, tx TransactionData) error {
+	coll := client.MongoClient.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_TRANSACTION"))
 
 	document := bson.M{
 		"name":    tx.Name,
@@ -84,8 +84,8 @@ func InsertTransactionToDb(ctx context.Context, client *mongo.Client, tx Transac
 	return nil
 }
 
-func LogError(ctx context.Context, client *mongo.Client, err error) {
-	coll := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_ERROR"))
+func (client *MongoDBPersister) LogError(ctx context.Context, err error) {
+	coll := client.MongoClient.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_COLLECTION_ERROR"))
 
 	document := bson.M{
 		"error":     err.Error(),
