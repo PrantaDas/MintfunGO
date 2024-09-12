@@ -14,6 +14,7 @@ type ProcessedData struct {
 	EthValue string
 	To       string
 	CallData string
+	Hash     string
 }
 
 func ProcessData(ctx context.Context, collection api.Collection, txs []api.Transaction) (ProcessedData, error) {
