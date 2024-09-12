@@ -1,5 +1,9 @@
 services:
 
+  mintfun:
+    build: .
+    depends_on:
+      - mongo
   mongo:
     image: mongo
     restart: unless-stopped
