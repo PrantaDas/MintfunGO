@@ -6,8 +6,11 @@ import (
 	"mintfun/internal/api"
 	"mintfun/internal/db"
 	"mintfun/internal/helpers"
+	"mintfun/internal/web3"
 	"mintfun/internal/worker"
+	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/joho/godotenv"
@@ -30,6 +33,16 @@ func main() {
 
 	persiter := db.NewMongoDBPersister(client)
 
+	gasLimit, err := strconv.Atoi(os.Getenv("GAS_LIMIT"))
+	if err != nil {
+		log.Fatal("Error converting GAS_LIMIT to integer", err)
+	}
+	wallet, err := web3.NewWallet(os.Getenv("PRIVATE_KEY"), os.Getenv("RPCC_URL"), uint64(gasLimit))
+
+	if err != nil {
+		log.Fatal("Error creating wallet", err)
+	}
+
 	dataChannel := make(chan []api.Collection, 4)
 	defer close(dataChannel)
 
@@ -40,7 +53,7 @@ func main() {
 
 	go worker.FetchWorker(ctx, dataChannel)
 	go worker.TaskProcessor(ctx, dataChannel, txChannel)
-	go worker.Minter(ctx, persiter, txChannel)
+	go worker.Minter(ctx, persiter, txChannel, wallet)
 
 	<-ctx.Done()
 	log.Println("Shuttiing down gracefully...")

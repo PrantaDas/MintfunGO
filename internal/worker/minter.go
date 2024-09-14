@@ -2,20 +2,20 @@ package worker
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"mintfun/internal/db"
 	"mintfun/internal/helpers"
+	"mintfun/internal/web3"
 )
 
-func Minter(ctx context.Context, db *db.MongoDBPersister, txChan <-chan helpers.ProcessedData) {
+func Minter(ctx context.Context, db *db.MongoDBPersister, txChan <-chan helpers.ProcessedData, wallet *web3.Wallet) {
 	for {
 		select {
 		case <-ctx.Done():
 			log.Println("Minter stopped")
 			return
 		case tx := <-txChan:
-			fmt.Println(tx)
+			helpers.Transaction(ctx, tx, db, wallet)
 		}
 	}
 }
