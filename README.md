@@ -16,7 +16,7 @@ When the requirements of the project was given to us we were instructed to autom
 * Save the transaction into the DB for avoiding duplicate transactions.
 
 ### How it works
-* The bot gathers collection information from a api `https://mint.fun/api/mintfun/feed/free?range=30m&chain=8453` provided by the `mintfun` with 30 seconds intervals.
+* The bot gathers collection information from a api `https://mint.fun/api/mintfun/feed/free?range=30m&chain=8453` provided by the `mintfun` with 60 seconds intervals.
 
 * Then it filter outs the Blacklisted tokens from the collection and returns the rest of the data.
 * Then we iterate over the collection and send it for further processing where we gather necessary information for completig the transactiona and the after successful processing we save the collection info in `DB`.
