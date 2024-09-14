@@ -1,4 +1,4 @@
-## MINTFUN NFT minting Bot.
+## MintfunGo.
 
 Mintfun Bot is a web3 nft minting bot that [https://mint.fun](https://mint.fun) mints the NFT from the reference website depending on multiple conditions. It basically trgets the Tokens that are on [Base](https://docs.base.org/) chain and the Tokens that are not reported by the community. The bot search for the lowest price and minimum minting quantity of the collection and after satisfying the conditions the complete the transaction and save the collection info with the transaction ID to prevent the duplication of minting process for the same collection.
 
