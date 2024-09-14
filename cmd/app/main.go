@@ -37,7 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Error converting GAS_LIMIT to integer", err)
 	}
-	wallet, err := web3.NewWallet(os.Getenv("PRIVATE_KEY"), os.Getenv("RPCC_URL"), uint64(gasLimit))
+	wallet, err := web3.NewWallet(os.Getenv("PRIVATE_KEY"), os.Getenv("RPC_URL"), uint64(gasLimit))
 
 	if err != nil {
 		log.Fatal("Error creating wallet", err)
